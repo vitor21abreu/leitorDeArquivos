@@ -1,0 +1,97 @@
+Crie um sistema em Go (Golang) escalável e modular para processamento de relatórios de veículos.
+
+### Objetivo
+
+O sistema deve:
+
+1. Ler múltiplos formatos de arquivos (CSV, XLSX, TXT)
+2. Processar dados de veículos contendo pelo menos:
+
+   * ID
+   * Nome/Modelo
+   * Status (vendido/disponível)
+   * Data da venda
+3. Consolidar os dados mensalmente
+4. Identificar:
+
+   * Veículo mais vendido do mês
+   * Veículo menos vendido do mês
+   * Lista completa de veículos vendidos no mês
+
+---
+
+### Requisitos de Arquitetura (Escalabilidade)
+
+* Utilizar arquitetura modular (separação por camadas: models, services, readers, processors)
+* Implementar interface para leitura de arquivos (Strategy Pattern)
+* Permitir fácil adição de novos formatos (ex: JSON, API futura)
+* Processamento preparado para alto volume de dados
+* Uso de goroutines para processamento paralelo de múltiplos arquivos
+* Implementar logs estruturados
+* Tratar erros de forma resiliente
+
+---
+
+### Processamento de Dados
+
+* Agrupar vendas por mês
+* Contabilizar quantidade de vendas por modelo
+* Ordenar ranking de vendas
+* Identificar automaticamente:
+
+  * Top 1 (mais vendido)
+  * Último (menos vendido)
+
+---
+
+### Geração de Relatório em PDF
+
+Ao final do processamento, gerar um arquivo PDF contendo:
+
+1. Título: "Relatório de Vendas de Veículos - [Mês/Ano]"
+2. Seção de resumo:
+
+   * Veículo mais vendido (nome + quantidade)
+   * Veículo menos vendido (nome + quantidade)
+3. Seção de listagem:
+
+   * Lista completa dos veículos vendidos no mês
+   * Exibir em formato de tabela:
+
+     * ID
+     * Nome/Modelo
+     * Data da venda
+4. Layout organizado e legível
+
+---
+
+### Requisitos técnicos do PDF
+
+* Utilizar biblioteca de geração de PDF compatível com Go (ex: gofpdf ou equivalente)
+* Estruturar o PDF com:
+
+  * Cabeçalho
+  * Tabelas
+  * Espaçamento adequado
+* Salvar arquivo como:
+  relatorio_vendas_[mes]_[ano].pdf
+
+---
+
+### Extras (Diferencial)
+
+* Permitir execução via linha de comando
+* Aceitar diretório como entrada (processar múltiplos arquivos automaticamente)
+* Logar arquivos processados com sucesso/erro
+* Preparar estrutura para futura integração com APIs de marketplaces
+
+---
+
+### Resultado esperado
+
+Um sistema robusto, escalável e pronto para produção, capaz de:
+
+* Ler diferentes fontes de dados
+* Processar vendas de forma eficiente
+* Gerar insights automáticos
+* Exportar relatórios profissionais em PDF
