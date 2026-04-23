@@ -19,14 +19,14 @@ func GeraRelatorioPDF(vendas []models.Venda, nomeArquivo string) error {
 
 	pdf.SetTextColor(0, 0, 0)
 
-	modelos := application.ContarModelos(vendas)
-	estados := application.ContarEstados(vendas)
-	periodos := application.ContarPeriodos(vendas)
+	modelos := models.ContarModelos(vendas)
+	estados := models.ContarEstados(vendas)
+	periodos := models.ContarPeriodos(vendas)
 
-	mais, menos := application.TopEMenos(modelos)
-	periodoTop, _ := application.TopEMenos(periodos)
+	mais, menos := models.TopEMenos(modelos)
+	periodoTop, _ := models.TopEMenos(periodos)
 
-	ranking := application.Ordenar(modelos)
+	ranking := models.Ordenar(modelos)
 
 	total := 0
 	maiorValor := 0
