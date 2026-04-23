@@ -16,7 +16,7 @@ func PastaSaidaComData() string {
 }
 
 func ListarArquivos() ([]string, error) {
-	dir := "arquivos"
+	dir := "../arquivos"
 
 	files, err := os.ReadDir(dir)
 	if err != nil {
