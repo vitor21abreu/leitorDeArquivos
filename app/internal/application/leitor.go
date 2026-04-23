@@ -4,35 +4,30 @@ import (
 	"app/internal/application/leitores"
 	"fmt"
 	"path/filepath"
+	"strings"
 )
 
-var Reader = map[string]func(string) ([]map[string]string, error){
+var Readers = map[string]func(string) ([]map[string]string, error){
 	".csv":  leitores.LerCSV,
-	".xlsx": leitores.LerXlsx,	
+	".xlsx": leitores.LerXlsx,
 }
 
-func GetLeitor(ext string) (func(string) ([]map[string]string, error), bool) {
-	fn, ok := Reader[ext]
-	return fn, ok
+func GetLeitor(ext string) (func(string) ([]map[string]string, error), error) {
+	fn, ok := Readers[ext]
+	if !ok {
+		return nil, fmt.Errorf("leitor não encontrado para extensão: %s", ext)
+	}
+
+	return fn, nil
 }
 
 func LerArquivo(caminho string) ([]map[string]string, error) {
-	ext := filepath.Ext(caminho)
+	ext := strings.ToLower(filepath.Ext(caminho))
 
-	fn, ok := GetLeitor(ext)
-	if !ok {
-		return nil, fmt.Errorf("tipo não suportado")
+	fn, err := GetLeitor(ext)
+	if err != nil {
+		return nil, err
 	}
 
 	return fn(caminho)
-}
-
-func LerXlsx(caminho string) ([]map[string]string, error) {
-	// Implementação para ler arquivos Excel
-	return nil, nil
-}
-
-func LerTXT(caminho string) ([]map[string]string, error) {
-	// Implementação para ler arquivos TXT
-	return nil, nil
 }

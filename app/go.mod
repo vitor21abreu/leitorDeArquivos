@@ -2,7 +2,10 @@ module app
 
 go 1.26.1
 
-require github.com/xuri/excelize/v2 v2.10.1
+require (
+	github.com/jung-kurt/gofpdf v1.16.2
+	github.com/xuri/excelize/v2 v2.10.1
+)
 
 require (
 	github.com/richardlehane/mscfb v1.0.6 // indirect

@@ -1,10 +1,8 @@
 package domain
 
-import "time"
-
-type Vehicle struct {
-    ID        string
-    Model     string
-    Status    string
-    SoldAt    time.Time
+type Venda struct {
+	Modelo  string
+	Ano     string
+	Estado  string
+	Periodo string
 }
