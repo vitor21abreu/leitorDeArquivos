@@ -12,7 +12,6 @@ func GeraRelatorioPDF(vendas []domain.Venda, nomeArquivo string) error {
 	pdf := gofpdf.New("P", "mm", "A4", "")
 	pdf.AddPage()
 
-	// ===== HEADER =====
 	pdf.SetFillColor(40, 60, 90)
 	pdf.SetTextColor(255, 255, 255)
 	pdf.SetFont("Arial", "B", 18)
@@ -21,18 +20,19 @@ func GeraRelatorioPDF(vendas []domain.Venda, nomeArquivo string) error {
 
 	pdf.SetTextColor(0, 0, 0)
 
-	// ===== PROCESSAMENTO =====
 	modelos := application.ContarModelos(vendas)
-
 	mais, menos := application.TopEMenos(modelos)
 	ranking := application.Ordenar(modelos)
 
 	total := 0
+	maiorValor := 0
 	for _, v := range modelos {
 		total += v
+		if v > maiorValor {
+			maiorValor = v
+		}
 	}
 
-	// ===== CARDS =====
 	pdf.SetFont("Arial", "B", 12)
 
 	drawCard := func(x, y float64, titulo, valor string) {
@@ -53,9 +53,8 @@ func GeraRelatorioPDF(vendas []domain.Venda, nomeArquivo string) error {
 	drawCard(75, 25, "Mais Vendido", mais)
 	drawCard(140, 25, "Menos Vendido", menos)
 
-	pdf.Ln(35)
+	pdf.SetXY(10, 60)
 
-	// ===== TABELA =====
 	pdf.SetFont("Arial", "B", 14)
 	pdf.Cell(40, 10, "Ranking")
 	pdf.Ln(8)
@@ -70,7 +69,7 @@ func GeraRelatorioPDF(vendas []domain.Venda, nomeArquivo string) error {
 
 	for _, item := range ranking {
 		if item.Nome == mais {
-			pdf.SetFillColor(200, 255, 200) // destaque
+			pdf.SetFillColor(200, 255, 200)
 		} else {
 			pdf.SetFillColor(255, 255, 255)
 		}
@@ -79,37 +78,37 @@ func GeraRelatorioPDF(vendas []domain.Venda, nomeArquivo string) error {
 		pdf.CellFormat(40, 8, fmt.Sprintf("%d", item.Valor), "1", 1, "C", true, 0, "")
 	}
 
-	// ===== GRÁFICO =====
-	pdf.Ln(10)
+	pdf.Ln(15)
 	pdf.SetFont("Arial", "B", 14)
 	pdf.Cell(40, 10, "Grafico de Vendas")
-	pdf.Ln(10)
+	pdf.Ln(12)
 
-	max := 0
-	for _, v := range ranking {
-		if v.Valor > max {
-			max = v.Valor
-		}
+	if maiorValor == 0 {
+		maiorValor = 1
 	}
 
-	barWidth := 30.0
+	baseY := pdf.GetY() + 40
+	startX := 15.0
+	barWidth := 25.0
+	spacing := 10.0
+	maxBarHeight := 35.0
 
-	for _, item := range ranking {
-		height := float64(item.Valor) / float64(max) * 40
-
-		x := pdf.GetX()
-		y := pdf.GetY()
+	for i, item := range ranking {
+		height := (float64(item.Valor) / float64(maiorValor)) * maxBarHeight
+		currentX := startX + float64(i)*(barWidth+spacing)
 
 		pdf.SetFillColor(100, 149, 237)
-		pdf.Rect(x, y-height, barWidth, height, "F")
+		pdf.Rect(currentX, baseY-height, barWidth, height, "F")
 
-		pdf.SetY(y + 2)
-		pdf.SetX(x)
 		pdf.SetFont("Arial", "", 8)
+		pdf.SetXY(currentX, baseY+2)
 		pdf.CellFormat(barWidth, 5, item.Nome, "", 0, "C", false, 0, "")
 
-		pdf.SetXY(x+barWidth+5, y)
+		pdf.SetXY(currentX, baseY-height-5)
+		pdf.CellFormat(barWidth, 5, fmt.Sprintf("%d", item.Valor), "", 0, "C", false, 0, "")
 	}
+
+	pdf.SetY(baseY + 15)
 
 	return pdf.OutputFileAndClose(nomeArquivo)
 }
