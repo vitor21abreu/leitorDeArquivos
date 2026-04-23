@@ -1,14 +1,13 @@
-package service
+package views
 
 import (
-	"app/internal/application"
-	"app/internal/domain"
+	"app/internal/models"
 	"fmt"
 
 	"github.com/jung-kurt/gofpdf"
 )
 
-func GeraRelatorioPDF(vendas []domain.Venda, nomeArquivo string) error {
+func GeraRelatorioPDF(vendas []models.Venda, nomeArquivo string) error {
 	pdf := gofpdf.New("P", "mm", "A4", "")
 	pdf.AddPage()
 
@@ -16,14 +15,14 @@ func GeraRelatorioPDF(vendas []domain.Venda, nomeArquivo string) error {
 	pdf.Cell(40, 10, "RELATORIO DE VENDAS DE CARROS")
 	pdf.Ln(12)
 
-	modelos := application.ContarModelos(vendas)
-	estados := application.ContarEstados(vendas)
-	periodos := application.ContarPeriodos(vendas)
+	modelos := models.ContarModelos(vendas)
+	estados := models.ContarEstados(vendas)
+	periodos := models.ContarPeriodos(vendas)
 
-	mais, menos := application.TopEMenos(modelos)
-	periodoTop, _ := application.TopEMenos(periodos)
+	mais, menos := models.TopEMenos(modelos)
+	periodoTop, _ := models.TopEMenos(periodos)
 
-	ranking := application.Ordenar(modelos)
+	ranking := models.Ordenar(modelos)
 
 	pdf.SetFont("Arial", "", 12)
 

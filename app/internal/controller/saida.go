@@ -1,8 +1,9 @@
-package adapter
+package controller
 
 import (
-	"app/internal/application"
-	"app/internal/service"
+	"app/internal/models"     
+	"app/internal/repository" 
+	"app/internal/views"     
 	"fmt"
 	"os"
 	"path/filepath"
@@ -51,21 +52,23 @@ func ProcessarArquivos() {
 	os.MkdirAll(dir, os.ModePerm)
 
 	for _, caminho := range arquivos {
-
-		data, err := application.LerArquivo(caminho)
+		// Alterado para 'repository'
+		data, err := repository.LerArquivo(caminho)
 		if err != nil {
 			fmt.Println("Erro:", err)
 			continue
 		}
 
-		vendas := application.MapToVendas(data)
+		// Alterado para 'models' (onde você colocou o MapToVendas)
+		vendas := models.MapToVendas(data)
 
 		nomeBase := filepath.Base(caminho)
 		nomeSemExt := strings.TrimSuffix(nomeBase, filepath.Ext(nomeBase))
 
 		nomePDF := filepath.Join(dir, nomeSemExt+".pdf")
 
-		err = service.GeraRelatorioPDF(vendas, nomePDF)
+		// Alterado para 'views' (onde está o gerador de PDF)
+		err = views.GeraRelatorioPDF(vendas, nomePDF)
 		if err != nil {
 			fmt.Println("Erro ao gerar PDF:", err)
 			continue

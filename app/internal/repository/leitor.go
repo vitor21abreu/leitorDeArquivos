@@ -1,11 +1,12 @@
-package application
+package repository 
 
 import (
-	"app/internal/application/leitores"
+	"app/internal/repository/leitores"
 	"fmt"
 	"path/filepath"
 	"strings"
 )
+
 
 var Readers = map[string]func(string) ([]map[string]string, error){
 	".csv":  leitores.LerCSV,

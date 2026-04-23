@@ -1,7 +1,7 @@
 package main
 
-import "app/internal/adapter"
+import "app/internal/controller"
 
 func main() {
-	adapter.Entrada()
+	controller.Entrada()
 }

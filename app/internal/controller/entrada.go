@@ -1,4 +1,4 @@
-package adapter
+package controller
 
 func Entrada() {
 	ProcessarArquivos()
